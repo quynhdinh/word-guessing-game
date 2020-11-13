@@ -17,3 +17,4 @@ A socket programming assignment of designing a game show called "Magical Wheel" 
 - [ ] Create scoreboard
 #### TODO
 - [ ] Screen recording game play
+- [ ] Writing references
