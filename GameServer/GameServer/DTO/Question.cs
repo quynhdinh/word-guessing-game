@@ -28,7 +28,7 @@ namespace GameServer
             char ch = s[0];
             alreadyGuessed.Add(ch);
         }
-        public string updateShowed(string s)
+        public string updateShowed()
         {
             string res = "";
             for(int i = 0; i < keyword.Length; i++)
@@ -55,5 +55,6 @@ namespace GameServer
         public int Size { get => size; set => size = value; }
         public List<int> Showed { get => showed; set => showed = value; }
         public List<char> AlreadyGuessed { get => alreadyGuessed; set => alreadyGuessed = value; }
+
     }
 }
