@@ -38,6 +38,7 @@ namespace GameServer
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             form = new MainForm(bListenClick, bSendClick, bLoadQuestionClick);
+            loadData();
             Application.Run(form);
         }
 
@@ -239,7 +240,6 @@ namespace GameServer
                     x.entry.Value.Send(sendeee);
                 }
             }
-            loadData();
             Debug.WriteLine("We are at: " + indexQuestion.ToString());
             form.loadQuestion(listQuestions[indexQuestion].Keyword.ToString(), listQuestions[indexQuestion].Hint.ToString());
             string msgQuestion = "QQQ" + listQuestions[indexQuestion].updateShowed() + ' ' + listQuestions[indexQuestion].Hint.ToString();
