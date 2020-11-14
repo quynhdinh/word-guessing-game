@@ -38,6 +38,7 @@ namespace GameServer
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             form = new MainForm(bListenClick, bSendClick, bLoadQuestionClick);
+            loadData();
             Application.Run(form);
         }
 
@@ -156,7 +157,7 @@ namespace GameServer
                         else // does match, then update everything and send vietn*m back
                         {
                             listQuestions[indexQuestion].updateGuesses(s);
-                            string sendee = listQuestions[indexQuestion].updateShowed(s);
+                            string sendee = listQuestions[indexQuestion].updateShowed();
                             Debug.WriteLine("The keyword sent back to client: " + sendee);
                             byte[] ss = Encoding.UTF8.GetBytes("COR:" + sendee);
                             allClientSockets[clientPoint].Send(ss);
@@ -239,10 +240,9 @@ namespace GameServer
                     x.entry.Value.Send(sendeee);
                 }
             }
-            loadData();
             Debug.WriteLine("We are at: " + indexQuestion.ToString());
             form.loadQuestion(listQuestions[indexQuestion].Keyword.ToString(), listQuestions[indexQuestion].Hint.ToString());
-            string msgQuestion = "QQQ" + listQuestions[indexQuestion].Keyword.ToString() + ' ' + listQuestions[indexQuestion].Hint.ToString();
+            string msgQuestion = "QQQ" + listQuestions[indexQuestion].updateShowed() + ' ' + listQuestions[indexQuestion].Hint.ToString();
             byte[] sendee = Encoding.UTF8.GetBytes(msgQuestion);
             foreach (Socket s in allClientSockets.Values)
                 s.Send(sendee);
