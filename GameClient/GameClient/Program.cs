@@ -72,6 +72,7 @@ namespace GameClient
                     if (s.StartsWith("QQQ"))
                     {
                         System.Diagnostics.Debug.WriteLine("This is QQQ: ");
+                        form.Println(s);
                         s = s.Substring(3);
                         form.updateQuestion(s);
                         form.Println("A new question has been loaded!");
@@ -83,7 +84,11 @@ namespace GameClient
                         form.isItMyTurn(turn);
                         if(turn == 1)
                         {
-                            form.Println("IT IS YOUR TURN!");
+                            form.Println("It is your turn");
+                        }
+                        else
+                        {
+                            form.Println("Be pateint. Wait for your turn");
                         }
                     }
                     else if (s.StartsWith("COR:"))

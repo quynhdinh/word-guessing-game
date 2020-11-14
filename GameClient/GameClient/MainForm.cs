@@ -166,6 +166,18 @@ namespace GameClient
             }
         }
 
+        public void setButtonGuessEnable(bool enabled)
+        {
+            if (this.btnGuess.InvokeRequired)
+            {
+                VoidBool voidBool = setButtonGuessEnable;
+                this.btnGuess.Invoke(voidBool, enabled);
+            }
+            else
+            {
+                this.btnGuess.Enabled = enabled;
+            }
+        }
         private void btnClearStatus_Click(object sender, EventArgs e)
         {
             this.textBoxMsg.Clear();
