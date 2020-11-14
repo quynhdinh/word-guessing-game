@@ -95,7 +95,7 @@ namespace GameClient
                     }
                     else if (s.StartsWith("FLS:"))
                     {
-                        form.Println("You guessed it correctly");
+                        form.Println("You guessed it incorrectly");
                     }
                     else
                     {
@@ -134,7 +134,6 @@ namespace GameClient
             }
             else if(ch.Length != 0 && guessAll.Length != 0)
             {
-                Debug.WriteLine("Error: You can EITHER guess all OR guess one character (leave one text box blank)");
                 form.Println("Error: You can EITHER guess all OR guess one character (leave one text box blank)");
             }
             else if(ch.Length == 1)
