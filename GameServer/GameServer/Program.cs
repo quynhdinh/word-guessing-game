@@ -77,7 +77,7 @@ namespace GameServer
                     string clientPoint = clientSocket.RemoteEndPoint.ToString();
                     form.Println($"Client {clientPoint}'s request connection accepted.");
 
-                    allClientSockets.Add(clientPoint, clientSocket);
+
                     form.ComboBoxAddItem(clientPoint);
 
                     //Start a new thread to keep receiving messages
@@ -97,13 +97,40 @@ namespace GameServer
             Socket clientSocket = so as Socket;
             string clientPoint = clientSocket.RemoteEndPoint.ToString();
             Debug.WriteLine("Received from: " + clientPoint);
+            bool setname = false;
+            while (!setname)
+            {
+                byte[] bufname = new byte[1024];
+                int len1 = clientSocket.Receive(bufname);
+                if (len1 != 0)
+                {
+                    string name = Encoding.UTF8.GetString(bufname, 0, len1);
+                    name = name.Substring(4);
+                    if (!name.All(x => char.IsLetterOrDigit(x) || x == '_'))
+                    {
+                        byte[] send = Encoding.UTF8.GetBytes("ERR: name not in right format(must be alphanumeric or underscore");
+                        clientSocket.Send(send);
+                        continue;
+                    }
+                    if (allClientSockets.ContainsKey(name))
+                    {
+                        byte[] send = Encoding.UTF8.GetBytes("ERR: name already exist");
+                        clientSocket.Send(send);
+                        continue;
+                    }
+                    clientPoint = name;
+                    allClientSockets.Add(clientPoint, clientSocket);
+                    setname = true;
+                }
+            }
+
             while (true) {
                 try {
                     //Get the sent message container
                     byte[] buf = new byte[1024 * 1024 * 2];
                     int len = clientSocket.Receive(buf);
                     //If valid byte is 0, skip
-                    if (len == 0) break;
+                    if (len == 0) continue;
 
                     string s = Encoding.UTF8.GetString(buf, 0, len);
                     string flag = s.Substring(0, 4);
