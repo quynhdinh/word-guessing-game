@@ -1,7 +1,11 @@
-﻿3
+﻿5
 python
 One of the most popular interpreter programming languages
 eminem
 A very famous white rapper
 vietnam
-a country graphically below China
+a country graphically locates below China
+joebiden
+the 46th president of the united states
+donaldtrump
+the richest president ever of the united states

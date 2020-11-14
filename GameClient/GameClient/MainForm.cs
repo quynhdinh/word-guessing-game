@@ -104,7 +104,7 @@ namespace GameClient
             string keyword="";
             while(s[0] != ' ')
             {
-                keyword += s[0];
+                keyword += '*';
                 s = s.Substring(1);
             }
             s = s.Substring(1);

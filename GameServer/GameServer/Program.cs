@@ -153,7 +153,7 @@ namespace GameServer
                             byte[] ss = Encoding.UTF8.GetBytes("FLS:");
                             allClientSockets[clientPoint].Send(ss);
                         }
-                        else // does match update everything and send vietn*m back
+                        else // does match, then update everything and send vietn*m back
                         {
                             listQuestions[indexQuestion].updateGuesses(s);
                             string sendee = listQuestions[indexQuestion].updateShowed();
