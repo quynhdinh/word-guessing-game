@@ -9,6 +9,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security.Policy;
+using GameServer.DTO;
 
 namespace GameServer
 {
@@ -21,8 +22,9 @@ namespace GameServer
         static IPAddress ip = null;
         static IPEndPoint point = null;
         static int indexPlayer = 0; // the index of the current player is in turn
-        static Dictionary<string, Socket> allClientSockets = null;
-        static List<string> clientsQueue;
+        static List<Player> listPlayer;
+//        static Dictionary<string, Socket> allClientSockets = null;
+  //      static List<string> clientsQueue;
         static MainForm form = null;
 
         static Dictionary<string, int> scoreboard = null;
@@ -32,9 +34,8 @@ namespace GameServer
         [STAThread]
         static void Main()
         {
-            allClientSockets = new Dictionary<string, Socket>();
             scoreboard = new Dictionary<string, int>();
-            clientsQueue = new List<string>();
+            listPlayer = new List<Player>();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             form = new MainForm(bListenClick, bSendClick, bLoadQuestionClick);
@@ -91,7 +92,40 @@ namespace GameServer
                 }
             }
         }
+        static bool containThisName(string s)
+        {
+            foreach (var item in listPlayer)
+                if(item.Nickname == s)
+                    return true;
+            return false;
+        }
 
+        static void updateScore(Socket socket, int point)
+        {
+            foreach (var item in listPlayer)
+                if(item.Socket == socket)
+                {
+                    item.Point += point;
+                    break;
+                }
+        }
+
+        static void disqualifyPlayer(Socket socket, bool kick)
+        {
+            foreach (var item in listPlayer)
+                if(item.Socket == socket)
+                {
+                    item.Disqualified = kick;
+                    break;
+                }
+        }
+
+        static void nextPlayer(ref int now)
+        {
+            now++;
+            if (now == (int)listPlayer.Count())
+                now = 0;
+        }
         static void Receive(object so)
         {
             Socket clientSocket = so as Socket;
@@ -116,14 +150,15 @@ namespace GameServer
                         clientSocket.Send(send);
                         continue;
                     }
-                    if (allClientSockets.ContainsKey(name))
+                    if (containThisName(name))
                     {
                         byte[] send = Encoding.UTF8.GetBytes("ERR: name already exist");
                         clientSocket.Send(send);
                         continue;
                     }
                     clientPoint = name;
-                    allClientSockets.Add(clientPoint, clientSocket);
+                    //allClientSockets.Add(clientPoint, clientSocket);
+                    listPlayer.Add(new Player(name, 0, 0, false, clientSocket));
                     setname = true;
                     form.Println("The player " +name + " has joined the game.");
 
@@ -149,27 +184,30 @@ namespace GameServer
                         Debug.WriteLine("The player " + clientPoint + " guess all " + s);
                         if(s == listQuestions[indexQuestion].Keyword)
                         {
-                            byte[] sendeee = Encoding.UTF8.GetBytes("GESSYou guessed it right. You recieved 1 point");
-                            allClientSockets[clientPoint].Send(sendeee);
-                            foreach (var item in allClientSockets)
+                            byte[] sendeee = Encoding.UTF8.GetBytes("GESSYou guessed it right. You recieved 3 point");
+                            updateScore(clientSocket, 3);
+                            foreach (var item in listPlayer)
                             {
-                                if(item.Key != clientPoint)
+                                if(item.Socket == clientSocket)
                                 {
-                                    byte[] ss = Encoding.UTF8.GetBytes("ANNOPlayer" + ip.ToString() + "guessed the word right. Now moving to the next question");
-                                    allClientSockets[item.Key].Send(ss);
+                                    item.Socket.Send(sendeee);
+                                }
+                                else
+                                {
+                                    byte[] ss = Encoding.UTF8.GetBytes("ANNOPlayer" + item.Nickname + "guessed the word right. Now moving to the next question");
+                                    item.Socket.Send(ss);
                                 }
                             }
                         }
-                        else
+                        else // guess it wrong => disqualify this player
                         {
                             byte[] sendeee = Encoding.UTF8.GetBytes("ANNOYou guessed it wrong! You have been disqualified!");
-                            allClientSockets[clientPoint].Send(sendeee);
-                            allClientSockets.Remove(clientPoint);
+                            clientSocket.Send(sendeee);
+                            disqualifyPlayer(clientSocket, true);
                             form.Println("The player " + ip.ToString() + " has been disqualified");
-
                         }
                     }
-                    else if (flag == "ONE:")
+                    else if (flag == "ONE:") // one character sent
                     {
                         Debug.WriteLine("The current questionIndex is: " + indexQuestion.ToString());
                         Debug.WriteLine("That one character is: " + s);
@@ -183,10 +221,10 @@ namespace GameServer
                             }
                         }
                         Debug.WriteLine(bingo ? "Match" : "Not match");
-                        if(bingo == false) // does not match
+                        if(bingo == false) // does not match annouce and move on
                         {
                             byte[] ss = Encoding.UTF8.GetBytes("FLS:");
-                            allClientSockets[clientPoint].Send(ss);
+                            clientSocket.Send(ss);
                         }
                         else // does match, then update everything and send vietn*m back
                         {
@@ -194,26 +232,29 @@ namespace GameServer
                             string sendee = listQuestions[indexQuestion].updateShowed();
                             Debug.WriteLine("The keyword sent back to client: " + sendee);
                             byte[] ss = Encoding.UTF8.GetBytes("COR:" + sendee);
-                            allClientSockets[clientPoint].Send(ss);
+                            clientSocket.Send(ss);
                         }
+                        //TODO: continue next player
+                        nextPlayer(ref indexPlayer);
                     }
-                    else if(flag == "MSG:")
+                    else if(flag == "MSG:") // just a chit-chat message, normal print out on form
                     {
                         Debug.WriteLine("MSG received");
                         form.Println($"{clientPoint}: {s}");
                     }
                     else return;
 
-                    foreach (Socket t in allClientSockets.Values) {
+                    foreach (var item in listPlayer)
+                    {
                         byte[] sendee = Encoding.UTF8.GetBytes($"{clientPoint}: {s}");
-                        t.Send(sendee);
+                        item.Socket.Send(sendee);
                     }
 
                     //byte[] sendee = Encoding.UTF8.GetBytes("Server returns information");
                     //clientSocket.Send(sendee);
                 }
                 catch (SocketException e) {
-                    allClientSockets.Remove(clientPoint);
+                    //allClientSockets.Remove(clientPoint);
                     form.ComboBoxRemoveItem(clientPoint);
 
                     form.Println($"Client {clientSocket.RemoteEndPoint} Disconnect： {e.Message}");
@@ -225,14 +266,15 @@ namespace GameServer
                 }
             }
         }
-
         static void SendMsg(object sender, EventArgs e)
         {
             string msg = form.GetMsgText();
             if (msg == "") return;
             byte[] sendee = Encoding.UTF8.GetBytes($"Server：{msg}");
-            foreach(Socket s in allClientSockets.Values)
-                s.Send(sendee);
+            foreach (var item in listPlayer)
+            {
+                item.Socket.Send(sendee);
+            }
             form.Println(msg);
             form.ClearMsgText();
         }
@@ -255,36 +297,52 @@ namespace GameServer
         }
         static void LoadQuestions(object sender, EventArgs e)
         {
-            indexQuestion++;
-            foreach (String s in allClientSockets.Keys)
+            Debug.WriteLine("Size = " + listPlayer.Count().ToString());
+            foreach (var item in listPlayer)
             {
-                clientsQueue.Add(s);
+                Debug.WriteLine(item.Disqualified ? "Kicked" : "In");
             }
-            foreach(var x in allClientSockets.Select((entry, index)=> new { entry, index }))
+            indexQuestion++;
+            Debug.WriteLine("Size = " + listPlayer.Count().ToString());
+            Debug.WriteLine("indexPlayer = " + indexPlayer.ToString());
+            if (!listPlayer[indexPlayer].Disqualified) nextPlayer(ref indexPlayer);
+            Debug.WriteLine("Now at " + indexPlayer.ToString());
+            for (int index = 0; index < listPlayer.Count(); index++)
             {
-                //Debug.WriteLine("{0}: {1} = {2}", x.index, x.entry.Key, x.entry.Value);
-                if(indexPlayer == x.index)
+                if(index == indexPlayer)
                 {
                     byte[] sendeee = Encoding.UTF8.GetBytes("InTurn?" + 1.ToString());
-                    x.entry.Value.Send(sendeee);
+                    listPlayer[index].Socket.Send(sendeee);
                 }
                 else
                 {
                     byte[] sendeee = Encoding.UTF8.GetBytes("InTurn?" + 0.ToString());
-                    x.entry.Value.Send(sendeee);
+                    //Debug.WriteLine("indexPlayer = " + indexPlayer.ToString());
+                    //Debug.WriteLine("Total player: " + listPlayer.Count().ToString());
+                    listPlayer[indexPlayer].Socket.Send(sendeee);
                 }
             }
             Debug.WriteLine("We are at: " + indexQuestion.ToString());
             form.loadQuestion(listQuestions[indexQuestion].Keyword.ToString(), listQuestions[indexQuestion].Hint.ToString());
             string msgQuestion = "QQQ" + listQuestions[indexQuestion].updateShowed() + ' ' + listQuestions[indexQuestion].Hint.ToString();
             byte[] sendee = Encoding.UTF8.GetBytes(msgQuestion);
-            foreach (Socket s in allClientSockets.Values)
-                s.Send(sendee);
+
+            // if that player hasn't been disqualified, send question to him
+            foreach (var item in listPlayer)
+            {
+                if(!item.Disqualified) item.Socket.Send(sendee);
+            }
             form.Println("Question has been loaded and sent to the clients!");
             if(listQuestions.Count == indexQuestion)
             {
                 form.disableLoadQuestionButton();
+                finalizeAndShowScoreboard();
             }
+        }
+
+        static void finalizeAndShowScoreboard()
+        {
+
         }
 
     }
