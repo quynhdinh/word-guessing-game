@@ -97,12 +97,12 @@
             // textBoxMsg
             // 
             this.textBoxMsg.BackColor = System.Drawing.SystemColors.Window;
-            this.textBoxMsg.Location = new System.Drawing.Point(460, 77);
+            this.textBoxMsg.Location = new System.Drawing.Point(421, 65);
             this.textBoxMsg.Multiline = true;
             this.textBoxMsg.Name = "textBoxMsg";
             this.textBoxMsg.ReadOnly = true;
             this.textBoxMsg.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxMsg.Size = new System.Drawing.Size(321, 204);
+            this.textBoxMsg.Size = new System.Drawing.Size(345, 204);
             this.textBoxMsg.TabIndex = 4;
             // 
             // buttonListen
@@ -116,7 +116,7 @@
             // 
             // buttonSend
             // 
-            this.buttonSend.Location = new System.Drawing.Point(706, 287);
+            this.buttonSend.Location = new System.Drawing.Point(667, 275);
             this.buttonSend.Name = "buttonSend";
             this.buttonSend.Size = new System.Drawing.Size(75, 23);
             this.buttonSend.TabIndex = 6;
@@ -126,7 +126,7 @@
             // 
             // textBoxSendee
             // 
-            this.textBoxSendee.Location = new System.Drawing.Point(460, 287);
+            this.textBoxSendee.Location = new System.Drawing.Point(421, 275);
             this.textBoxSendee.Name = "textBoxSendee";
             this.textBoxSendee.Size = new System.Drawing.Size(241, 23);
             this.textBoxSendee.TabIndex = 7;
@@ -142,14 +142,14 @@
             // 
             // txbKeyword
             // 
-            this.txbKeyword.Location = new System.Drawing.Point(89, 48);
+            this.txbKeyword.Location = new System.Drawing.Point(89, 36);
             this.txbKeyword.Name = "txbKeyword";
             this.txbKeyword.Size = new System.Drawing.Size(315, 23);
             this.txbKeyword.TabIndex = 9;
             // 
             // btnLoadQuestion
             // 
-            this.btnLoadQuestion.Location = new System.Drawing.Point(410, 48);
+            this.btnLoadQuestion.Location = new System.Drawing.Point(410, 36);
             this.btnLoadQuestion.Name = "btnLoadQuestion";
             this.btnLoadQuestion.Size = new System.Drawing.Size(122, 23);
             this.btnLoadQuestion.TabIndex = 10;
@@ -160,15 +160,15 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(9, 134);
+            this.dataGridView1.Location = new System.Drawing.Point(15, 130);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(389, 201);
+            this.dataGridView1.Size = new System.Drawing.Size(389, 186);
             this.dataGridView1.TabIndex = 12;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(154, 114);
+            this.label3.Location = new System.Drawing.Point(154, 110);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(77, 17);
             this.label3.TabIndex = 13;
@@ -178,7 +178,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label4.Location = new System.Drawing.Point(591, 55);
+            this.label4.Location = new System.Drawing.Point(589, 45);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(43, 17);
             this.label4.TabIndex = 14;
@@ -186,7 +186,7 @@
             // 
             // txbHint
             // 
-            this.txbHint.Location = new System.Drawing.Point(89, 84);
+            this.txbHint.Location = new System.Drawing.Point(89, 72);
             this.txbHint.Name = "txbHint";
             this.txbHint.Size = new System.Drawing.Size(315, 23);
             this.txbHint.TabIndex = 17;
@@ -194,7 +194,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 87);
+            this.label5.Location = new System.Drawing.Point(6, 75);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(31, 17);
             this.label5.TabIndex = 18;
@@ -203,7 +203,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(5, 48);
+            this.label6.Location = new System.Drawing.Point(5, 36);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(59, 17);
             this.label6.TabIndex = 19;
@@ -211,7 +211,7 @@
             // 
             // btnClearStatus
             // 
-            this.btnClearStatus.Location = new System.Drawing.Point(670, 316);
+            this.btnClearStatus.Location = new System.Drawing.Point(655, 304);
             this.btnClearStatus.Name = "btnClearStatus";
             this.btnClearStatus.Size = new System.Drawing.Size(111, 23);
             this.btnClearStatus.TabIndex = 20;
@@ -224,7 +224,7 @@
             this.AcceptButton = this.buttonSend;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(805, 343);
+            this.ClientSize = new System.Drawing.Size(778, 328);
             this.Controls.Add(this.btnClearStatus);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);

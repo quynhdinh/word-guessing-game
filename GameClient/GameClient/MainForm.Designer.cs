@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxIP = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -100,12 +101,12 @@
             // textBoxMsg
             // 
             this.textBoxMsg.BackColor = System.Drawing.SystemColors.Window;
-            this.textBoxMsg.Location = new System.Drawing.Point(557, 26);
+            this.textBoxMsg.Location = new System.Drawing.Point(489, 26);
             this.textBoxMsg.Multiline = true;
             this.textBoxMsg.Name = "textBoxMsg";
             this.textBoxMsg.ReadOnly = true;
             this.textBoxMsg.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxMsg.Size = new System.Drawing.Size(280, 267);
+            this.textBoxMsg.Size = new System.Drawing.Size(280, 240);
             this.textBoxMsg.TabIndex = 4;
             // 
             // buttonConnect
@@ -120,7 +121,7 @@
             // buttonSend
             // 
             this.buttonSend.Enabled = false;
-            this.buttonSend.Location = new System.Drawing.Point(762, 299);
+            this.buttonSend.Location = new System.Drawing.Point(694, 272);
             this.buttonSend.Name = "buttonSend";
             this.buttonSend.Size = new System.Drawing.Size(75, 23);
             this.buttonSend.TabIndex = 6;
@@ -129,7 +130,7 @@
             // 
             // textBoxSendee
             // 
-            this.textBoxSendee.Location = new System.Drawing.Point(557, 299);
+            this.textBoxSendee.Location = new System.Drawing.Point(489, 272);
             this.textBoxSendee.Name = "textBoxSendee";
             this.textBoxSendee.Size = new System.Drawing.Size(197, 23);
             this.textBoxSendee.TabIndex = 7;
@@ -147,7 +148,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(678, 6);
+            this.label4.Location = new System.Drawing.Point(604, 5);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(43, 17);
             this.label4.TabIndex = 11;
@@ -229,7 +230,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(426, 55);
+            this.label3.Location = new System.Drawing.Point(417, 55);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(38, 17);
             this.label3.TabIndex = 35;
@@ -238,7 +239,7 @@
             // lblSize
             // 
             this.lblSize.AutoSize = true;
-            this.lblSize.Location = new System.Drawing.Point(470, 55);
+            this.lblSize.Location = new System.Drawing.Point(452, 55);
             this.lblSize.Name = "lblSize";
             this.lblSize.Size = new System.Drawing.Size(31, 17);
             this.lblSize.TabIndex = 36;
@@ -246,7 +247,7 @@
             // 
             // btnClearStatus
             // 
-            this.btnClearStatus.Location = new System.Drawing.Point(664, 328);
+            this.btnClearStatus.Location = new System.Drawing.Point(596, 301);
             this.btnClearStatus.Name = "btnClearStatus";
             this.btnClearStatus.Size = new System.Drawing.Size(98, 23);
             this.btnClearStatus.TabIndex = 37;
@@ -259,7 +260,7 @@
             this.AcceptButton = this.buttonSend;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(849, 356);
+            this.ClientSize = new System.Drawing.Size(778, 328);
             this.Controls.Add(this.btnClearStatus);
             this.Controls.Add(this.lblSize);
             this.Controls.Add(this.label3);
@@ -284,6 +285,7 @@
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
             this.Name = "MainForm";
