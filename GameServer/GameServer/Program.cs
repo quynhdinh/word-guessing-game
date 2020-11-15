@@ -98,12 +98,16 @@ namespace GameServer
             string clientPoint = clientSocket.RemoteEndPoint.ToString();
             Debug.WriteLine("Received from: " + clientPoint);
             bool setname = false;
+            byte[] send1 = Encoding.UTF8.GetBytes("Write in the chat what your username is:");
+            clientSocket.Send(send1);
             while (!setname)
             {
                 byte[] bufname = new byte[1024];
                 int len1 = clientSocket.Receive(bufname);
                 if (len1 != 0)
                 {
+
+
                     string name = Encoding.UTF8.GetString(bufname, 0, len1);
                     name = name.Substring(4);
                     if (!name.All(x => char.IsLetterOrDigit(x) || x == '_'))
@@ -121,6 +125,9 @@ namespace GameServer
                     clientPoint = name;
                     allClientSockets.Add(clientPoint, clientSocket);
                     setname = true;
+                    form.Println("The player " +name + " has joined the game.");
+
+
                 }
             }
 
