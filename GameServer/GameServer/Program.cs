@@ -86,13 +86,8 @@ namespace GameServer
                     {
                         byte[] msg = Encoding.UTF8.GetBytes("Game is running please wait for next game./");
                         clientSocket.Send(msg);
-                        while (running)
-                        {
-
-                        }
-                        msg = Encoding.UTF8.GetBytes("Game is finish/");
-
-                        clientSocket.Send(msg);
+                        clientSocket.Close();
+                        return;
 
                     }
 
@@ -183,7 +178,7 @@ namespace GameServer
         /// <param name="now"></param>
         static void nextPlayer(ref int _now)
         {
-
+            if (!running) return;
             int now = _now;
             while (true)
             {
@@ -206,7 +201,7 @@ namespace GameServer
             }
             else
             {
-                byte[] msg = Encoding.UTF8.GetBytes("This is turn number: "+turn);
+                byte[] msg = Encoding.UTF8.GetBytes("This is turn number: "+ (turn+1)+"/");
                 foreach (Player player in listPlayer)
                 {
                     player.Socket.Send(msg);
@@ -284,14 +279,15 @@ namespace GameServer
                     //Debug.WriteLine("flag = " + flag);
                     if (flag == "ONE:" || flag == "ALL:") // one character sent
                     {
-                        if(clientSocket!= listPlayer[indexPlayer].Socket)
+
+                        if (clientSocket!= listPlayer[indexPlayer].Socket)
                         {
                             byte[] send = Encoding.UTF8.GetBytes("It is not your turn!/");
                             clientSocket.Send(send);
                             continue;
                         }
                         if (flag == "ONE:") guessOneCharacter(clientSocket, s[0]);
-                        else if(turn >2) guessTheKeyword(clientSocket, s);
+                        else if(turn >1) guessTheKeyword(clientSocket, s);
                         else
                         {
                             byte[] send = Encoding.UTF8.GetBytes("You can only guess the key word after 2 turns./");
@@ -365,11 +361,12 @@ namespace GameServer
                 {
                     byte[] sendeee = null;
                     string str = "InTurn?" + '0' + "/";
+
                     sendeee = Encoding.UTF8.GetBytes(str);
                     listPlayer[index].Socket.Send(sendeee);
 
                 }
-
+                indexPlayer = -1;
 
             }
             else // guess it wrong => disqualify this player
@@ -416,6 +413,10 @@ namespace GameServer
                 ss = Encoding.UTF8.GetBytes("UDT:" + sendee + "/"); // send to the one who isn't in turn
                 foreach (var item in listPlayer)
                 {
+                    if(item.Socket == clientSocket)
+                    {
+                        updateScore(clientSocket, 1);
+                    }
                     item.Socket.Send(ss);
                 }
             }
@@ -457,14 +458,16 @@ namespace GameServer
                 return;
             }
             running = true;
+            Console.Write(indexPlayer);
             foreach (var item in listPlayer)
             {
                 Debug.WriteLine(item.Disqualified ? "Kicked" : "In");
             }
-            if (indexPlayer == -1)
+            if (indexPlayer <0)
             {
                 indexPlayer = 0;
                 activatePlayer(indexPlayer);
+
             }
             indexQuestion++;
             if (listQuestions.Count == indexQuestion) // if we have been go through all questions
