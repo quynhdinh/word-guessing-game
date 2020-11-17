@@ -62,59 +62,66 @@ namespace GameClient
             Socket send = so as Socket;
             while (true)
             {
-                try {
+                try
+                {
                     //Get the message sent
                     byte[] buf = new byte[1024 * 1024 * 2];
                     int len = send.Receive(buf);
+
                     if (len == 0) break;
-                    string s = Encoding.UTF8.GetString(buf, 0, len);
-                    if (s.StartsWith("QQQ"))
+                    string[] ss = Encoding.UTF8.GetString(buf, 0, len).Split('/');
+                    foreach (string i in ss)
                     {
-                        System.Diagnostics.Debug.WriteLine("This is QQQ: ");
-                        form.Println(s);
-                        s = s.Substring(3);
-                        form.updateQuestion(s);
-                        form.Println("A new question has been loaded!");
-                    }
-                    else if (s.StartsWith("InTurn?"))
-                    {
-                        //Debug.WriteLine("This is InTurn?: ");
-                        int turn = s.Last() == '0' ? 0 : 1;
-                        Debug.WriteLine("Turn = " + turn.ToString());
-                        form.isItMyTurn(turn);
-                        if(turn == 1)
+                        string s = i;
+                        if (s.StartsWith("QQQ"))
                         {
-                            form.Println("It is your turn");
+                            System.Diagnostics.Debug.WriteLine("This is QQQ: ");
+                            form.Println(s);
+                            s = s.Substring(3);
+                            form.updateQuestion(s);
+                            form.Println("A new question has been loaded!");
+                        }
+                        else if (s.StartsWith("InTurn?"))
+                        {
+                            //Debug.WriteLine("This is InTurn?: ");
+                            int turn = s.Last() == '0' ? 0 : 1;
+                            Debug.WriteLine("Turn = " + turn.ToString());
+                            form.isItMyTurn(turn);
+                            if (turn == 1)
+                            {
+                                form.Println("It is your turn");
+                            }
+                            else
+                            {
+                                form.Println("Be pateint. Wait for your turn");
+                            }
+                        }
+                        else if (s.StartsWith("COR:"))
+                        {
+                            form.Println("You guessed it right!");
+                            s = s.Substring(4);
+                            Debug.WriteLine("after " + s.ToString());
+                            form.modifyKeyword(s);
+                        }
+                        else if (s.StartsWith("UDT:"))
+                        {
+                            form.Println("The keyword has been updated!");
+                            s = s.Substring(4);
+                            form.modifyKeyword(s);
+                        }
+                        else if (s.StartsWith("FLS:"))
+                        {
+                            form.Println("You guessed it incorrectly");
                         }
                         else
                         {
-                            form.Println("Be pateint. Wait for your turn");
+                            Debug.WriteLine("CAME TO MESSAGE BOX");
+                            form.Println(s);
                         }
                     }
-                    else if (s.StartsWith("COR:"))
-                    {
-                        form.Println("You guessed it right!");
-                        s = s.Substring(4);
-                        Debug.WriteLine("after " + s.ToString());
-                        form.modifyKeyword(s);
-                    }
-                    else if (s.StartsWith("UDT:"))
-                    {
-                        form.Println("The keyword has been updated!");
-                        s = s.Substring(4);
-                        form.modifyKeyword(s);
-                    }
-                    else if (s.StartsWith("FLS:"))
-                    {
-                        form.Println("You guessed it incorrectly");
-                    }
-                    else
-                    {
-                        Debug.WriteLine("CAME TO MESSAGE BOX");
-                        form.Println(s);
-                    }
                 }
-                catch (Exception e) {
+                catch (Exception e)
+                {
                     form.SetConnectionStatusLabel(false);
                     form.SetButtonSendEnabled(false);
                     form.Println($"Server disconnected1：{ e.Message}");
