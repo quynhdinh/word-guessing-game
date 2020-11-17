@@ -23,11 +23,20 @@ namespace GameServer
             this.showed = showed;
             this.alreadyGuessed = alreadyGuessed;
         }
-        public void updateGuesses(string s)
+
+        /// <summary>
+        /// update the character list that has been guessed
+        /// </summary>
+        /// <param name="ch"></param>
+        public void updateGuesses(char ch)
         {
-            char ch = s[0];
             alreadyGuessed.Add(ch);
         }
+
+        /// <summary>
+        /// return the new string to send to clients based on the characters guessed
+        /// </summary>
+        /// <returns></returns>
         public string updateShowed()
         {
             string res = "";

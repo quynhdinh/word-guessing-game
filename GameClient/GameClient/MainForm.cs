@@ -28,7 +28,15 @@ namespace GameClient
         {
             return (int)this.numericUpDownPort.Value;
         }
-
+        public List<char> getShownCharacters()
+        {
+            string s = txbKeyword.Text.ToString();
+            List<char> res = new List<char>();
+            foreach (char item in s)
+                if(item != '*')
+                    res.Add(item);
+            return res;
+        }
         public string GetMsgText()
         {
             return this.textBoxSendee.Text.Trim();
@@ -47,6 +55,11 @@ namespace GameClient
         }
 
         delegate void VoidInt(int n);
+           
+        /// <summary>
+        /// Enable button guess
+        /// </summary>
+        /// <param name="turn"></param>
         public void isItMyTurn(int turn)
         {
             if(this.btnGuess.InvokeRequired)
@@ -60,6 +73,11 @@ namespace GameClient
             }
         }
         delegate void VoidString(string s);
+
+        /// <summary>
+        /// Write chit chat on textbox
+        /// </summary>
+        /// <param name="s"></param>
         public void Println(string s)
         {
             if (this.textBoxMsg.InvokeRequired) {
@@ -71,6 +89,10 @@ namespace GameClient
             }
         }
 
+        /// <summary>
+        /// update the keyword (replacing with '*') *******->*****a*
+        /// </summary>
+        /// <param name="s"></param>
         public void modifyKeyword(string s)
         {
             if (this.txbKeyword.InvokeRequired)
@@ -98,6 +120,10 @@ namespace GameClient
                 this.txbHint.Text = hint;
             }
         }
+        /// <summary>
+        /// update the keyword and hint on textboxes
+        /// </summary>
+        /// <param name="s"></param>
         public void updateQuestion(string s)
         {
             Debug.WriteLine("question and hint: " + s);
