@@ -17,6 +17,7 @@ namespace GameClient
             this.buttonConnect.Click += b1Click;
             this.buttonSend.Click += b2Click;
             this.btnGuess.Click += b3Click;
+
         }
         
         public string GetIPText()
