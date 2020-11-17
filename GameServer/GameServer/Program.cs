@@ -24,6 +24,8 @@ namespace GameServer
         static int indexPlayer = -1; // the index of the current player is in turn
         static List<Player> listPlayer;
         static MainForm form = null;
+        static int turn = 0; // keep track of what turn we are in
+        static bool running = false;
 
         static Dictionary<string, int> scoreboard = null;
         /// <summary>
@@ -80,11 +82,25 @@ namespace GameServer
                     form.ComboBoxAddItem(clientPoint);
 
                     //Start a new thread to keep receiving messages
+                    if (running)// if the game is running do not accept new client
+                    {
+                        byte[] msg = Encoding.UTF8.GetBytes("Game is running please wait for next game./");
+                        clientSocket.Send(msg);
+                        while (running)
+                        {
+
+                        }
+                        msg = Encoding.UTF8.GetBytes("Game is finish/");
+
+                        clientSocket.Send(msg);
+
+                    }
+
                     Thread thread = new Thread(Receive);
-                    thread.IsBackground = true;
-                    thread.Start(clientSocket);
-                }
-                catch(Exception e) {
+                        thread.IsBackground = true;
+                        thread.Start(clientSocket);
+                    } 
+                catch (Exception e) {
                     form.Println($"Error： {e.Message}");
                     break;
                 }
@@ -119,6 +135,7 @@ namespace GameServer
                 }
         }
 
+
         /// <summary>
         /// set disqualify status for the player that is at Socket 'socket' as 'kick'
         /// </summary>
@@ -145,20 +162,56 @@ namespace GameServer
                 if (i!= now && !listPlayer[i].Disqualified) return false;
             return true;
         }
+        static void sendScoreboard()
+        {
+            string s = "ScoreBoard: /";
+            List<Player> sorted = listPlayer.OrderByDescending(x => x.Point).ToList();
+
+            foreach (Player player in sorted)
+            {
+                s += player.Nickname + " has " + player.Point + " points./";
+            }
+            byte[] msg = Encoding.UTF8.GetBytes(s);
+            foreach (Player player in listPlayer)
+            {
+                player.Socket.Send(msg);
+            }
+        }
         /// <summary>
         /// update the index to the next player that has not been disqualified
         /// </summary>
         /// <param name="now"></param>
         static void nextPlayer(ref int _now)
         {
+
             int now = _now;
             while (true)
             {
                 now++;
-                if (now == listPlayer.Count()) now = 0;
+                if (now >= listPlayer.Count()) now = 0;
                 if (!listPlayer[now].Disqualified) break;
             }
             _now = now;
+            turn++;
+
+            if (turn >= 5)
+            {
+                running = false;
+                byte[] msg  = Encoding.UTF8.GetBytes("The fifth turn has ended! Game over!/");
+                foreach(Player player in listPlayer)
+                {
+                    player.Socket.Send(msg);
+                }
+                sendScoreboard();
+            }
+            else
+            {
+                byte[] msg = Encoding.UTF8.GetBytes("This is turn number: "+turn);
+                foreach (Player player in listPlayer)
+                {
+                    player.Socket.Send(msg);
+                }
+            }
 
         }
         /// <summary>
@@ -167,10 +220,11 @@ namespace GameServer
         /// <param name="who"></param>
         static void activatePlayer(int who)
         {
+            if (!running) return;
             for (int index = 0; index < listPlayer.Count(); index++)
             {
                 byte[] sendeee = null;
-                string str = "InTurn?" + (index == who ? '1' : '0').ToString();
+                string str = "InTurn?" + (index == who ? '1' : '0').ToString()+"/";
                 Debug.WriteLine(str);
                 sendeee = Encoding.UTF8.GetBytes(str);
                 listPlayer[index].Socket.Send(sendeee);
@@ -196,13 +250,13 @@ namespace GameServer
                     name = name.Substring(4);
                     if (!name.All(x => char.IsLetterOrDigit(x) || x == '_'))
                     {
-                        byte[] send = Encoding.UTF8.GetBytes("ERR: name not in right format(must be alphanumeric or underscore");
+                        byte[] send = Encoding.UTF8.GetBytes("ERR: name not in right format(must be alphanumeric or underscore please choose another/");
                         clientSocket.Send(send);
                         continue;
                     }
                     if (containThisName(name))
                     {
-                        byte[] send = Encoding.UTF8.GetBytes("ERR: name already exist");
+                        byte[] send = Encoding.UTF8.GetBytes("ERR: name already exist please choose anotherf/");
                         clientSocket.Send(send);
                         continue;
                     }
@@ -230,10 +284,23 @@ namespace GameServer
                     //Debug.WriteLine("flag = " + flag);
                     if (flag == "ONE:" || flag == "ALL:") // one character sent
                     {
-                        if(flag == "ONE:") guessOneCharacter(clientSocket, s[0]);
-                        else guessTheKeyword(clientSocket, s);
+                        if(clientSocket!= listPlayer[indexPlayer].Socket)
+                        {
+                            byte[] send = Encoding.UTF8.GetBytes("It is not your turn!/");
+                            clientSocket.Send(send);
+                            continue;
+                        }
+                        if (flag == "ONE:") guessOneCharacter(clientSocket, s[0]);
+                        else if(turn >2) guessTheKeyword(clientSocket, s);
+                        else
+                        {
+                            byte[] send = Encoding.UTF8.GetBytes("You can only guess the key word after 2 turns./");
+                            clientSocket.Send(send);
+                            continue;
+                        }
                         Debug.WriteLine("On player: " + indexPlayer.ToString());
                         nextPlayer(ref indexPlayer);
+
                         activatePlayer(indexPlayer);
                     }
                     else if(flag == "MSG:") // just a chit-chat message, normal print out on form
@@ -258,6 +325,7 @@ namespace GameServer
                     form.ComboBoxRemoveItem(clientPoint);
 
                     form.Println($"Client {clientSocket.RemoteEndPoint} Disconnect： {e.Message}");
+
                     clientSocket.Close();
                     break;
                 }
@@ -276,35 +344,40 @@ namespace GameServer
         {
             if (s == listQuestions[indexQuestion].Keyword) // guess the whole keyword right
             {
+                running = false;
                 foreach (var item in listPlayer)
                 {
                     if (item.Socket == clientSocket)
                     {
-                        byte[] sendeee = Encoding.UTF8.GetBytes("GESSYou guessed it right. You recieved 3 point");
-                        updateScore(clientSocket, 3);
+                        byte[] sendeee = Encoding.UTF8.GetBytes("GESSYou guessed it right. You recieved 5 point/");
+                        updateScore(clientSocket, 5);
                         item.Socket.Send(sendeee);
                     }
                     else
                     {
-                        byte[] ss = Encoding.UTF8.GetBytes("ANNOPlayer" + item.Nickname + "guessed the word right. Now moving to the next question");
+                        byte[] ss = Encoding.UTF8.GetBytes("ANNOPlayer" + item.Nickname + "guessed the word right. Now moving to the next question/");
                         item.Socket.Send(ss);
                     }
                 }
+                sendScoreboard();
 
                 for (int index = 0; index < listPlayer.Count(); index++)
                 {
                     byte[] sendeee = null;
-                    string str = "InTurn?" + '0';
+                    string str = "InTurn?" + '0' + "/";
                     sendeee = Encoding.UTF8.GetBytes(str);
                     listPlayer[index].Socket.Send(sendeee);
+
                 }
+
+
             }
             else // guess it wrong => disqualify this player
             {
-                byte[] sendeee = Encoding.UTF8.GetBytes("ANNOYou guessed it wrong! You have been disqualified!");
+                byte[] sendeee = Encoding.UTF8.GetBytes("ANNOYou guessed it wrong! You have been disqualified!/");
                 clientSocket.Send(sendeee);
                 setDisqualifyPlayer(clientSocket, true); // set status of be disqualified as true
-                form.Println("The player " + ip.ToString() + " has been disqualified");
+                form.Println("The player " + ip.ToString() + " has been disqualified/");
             }
         }
 
@@ -330,7 +403,7 @@ namespace GameServer
             //Debug.WriteLine(bingo ? "Match" : "Not match");
             if (bingo == false) // DOESN'T match annouce and move on
             {
-                byte[] ss = Encoding.UTF8.GetBytes("FLS:");
+                byte[] ss = Encoding.UTF8.GetBytes("FLS:/");
                 clientSocket.Send(ss);
             }
             else // DOES match, then update everything and send vietn*m back
@@ -338,9 +411,9 @@ namespace GameServer
                 listQuestions[indexQuestion].updateGuesses(ch);
                 string sendee = listQuestions[indexQuestion].updateShowed();
                 //Debug.WriteLine("The keyword sent back to client: " + sendee);
-                byte[] ss = Encoding.UTF8.GetBytes("COR:" + sendee); // send to the one who guessed it right
+                byte[] ss = Encoding.UTF8.GetBytes("COR:" + sendee+"/"); // send to the one who guessed it right
                 clientSocket.Send(ss);
-                ss = Encoding.UTF8.GetBytes("UDT:" + sendee); // send to the one who isn't in turn
+                ss = Encoding.UTF8.GetBytes("UDT:" + sendee + "/"); // send to the one who isn't in turn
                 foreach (var item in listPlayer)
                 {
                     item.Socket.Send(ss);
@@ -351,7 +424,7 @@ namespace GameServer
         {
             string msg = form.GetMsgText();
             if (msg == "") return;
-            byte[] sendee = Encoding.UTF8.GetBytes($"Server：{msg}");
+            byte[] sendee = Encoding.UTF8.GetBytes($"Server：{msg}" + "/");
             foreach (var item in listPlayer)
             {
                 item.Socket.Send(sendee);
@@ -378,6 +451,12 @@ namespace GameServer
         }
         static void LoadQuestions(object sender, EventArgs e)
         {
+            if (listPlayer.Count < 1)
+            {
+                form.Println("Can't start because there aren't enough player!");
+                return;
+            }
+            running = true;
             foreach (var item in listPlayer)
             {
                 Debug.WriteLine(item.Disqualified ? "Kicked" : "In");
@@ -418,6 +497,7 @@ namespace GameServer
         static void finalizeAndShowScoreboard()
         {
             MessageBox.Show("End game! Check out the scoreboard");
+
         }
 
     }
