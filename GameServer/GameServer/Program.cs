@@ -351,7 +351,15 @@ namespace GameServer
                     }
                     else
                     {
+<<<<<<< HEAD
                         byte[] ss = Encoding.UTF8.GetBytes("ANNOPlayer" + item.Nickname + "guessed the word right. Now moving to the next question/");
+=======
+<<<<<<< Updated upstream
+                        byte[] ss = Encoding.UTF8.GetBytes("ANNOPlayer" + item.Nickname + "guessed the word right. Now moving to the next question");
+=======
+                        byte[] ss = Encoding.UTF8.GetBytes("ANNOPlayer " + item.Nickname + " guessed the word right. Now moving to the next question/");
+>>>>>>> Stashed changes
+>>>>>>> quynh
                         item.Socket.Send(ss);
                     }
                 }
@@ -452,6 +460,12 @@ namespace GameServer
         }
         static void LoadQuestions(object sender, EventArgs e)
         {
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+=======
+            turn = 0;
+>>>>>>> quynh
             if (listPlayer.Count < 1)
             {
                 form.Println("Can't start because there aren't enough player!");
@@ -459,6 +473,10 @@ namespace GameServer
             }
             running = true;
             Console.Write(indexPlayer);
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+>>>>>>> quynh
             foreach (var item in listPlayer)
             {
                 Debug.WriteLine(item.Disqualified ? "Kicked" : "In");
