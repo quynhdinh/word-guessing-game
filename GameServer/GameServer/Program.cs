@@ -27,18 +27,18 @@ namespace GameServer
         static int turn = 0; // keep track of what turn we are in
         static bool running = false;
 
-        static Dictionary<string, int> scoreboard = null;
+        //static Dictionary<string, int> scoreboard = null;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
-            scoreboard = new Dictionary<string, int>();
+            //scoreboard = new Dictionary<string, int>();
             listPlayer = new List<Player>();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            form = new MainForm(bListenClick, bSendClick, bLoadQuestionClick);
+            form = new MainForm(bListenClick, bSendClick, bLoadQuestionClick, EndGame);
             loadData();
             Application.Run(form);
         }
@@ -46,13 +46,15 @@ namespace GameServer
         static EventHandler bListenClick = SetListen;
         static EventHandler bSendClick = SendMsg;
         static EventHandler bLoadQuestionClick = LoadQuestions;
+        static EventHandler bEndGameClick = EndGame;
         static void SetListen(object sender, EventArgs e)
         {
             ip = IPAddress.Parse(form.GetIPText());
             point = new IPEndPoint(ip, form.GetPort());
 
             serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            try {
+            try
+            {
                 serverSocket.Bind(point);
                 serverSocket.Listen(20);
                 form.Println($"Server starts at {point}.");
@@ -61,7 +63,8 @@ namespace GameServer
                 thread.IsBackground = true;
                 thread.Start(serverSocket);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 form.Println($"Error： {ex.Message}");
             }
         }
@@ -71,7 +74,8 @@ namespace GameServer
             Socket serverSocket = so as Socket;
             while (true)
             {
-                try {
+                try
+                {
                     //Wait for connection and create a communication socket
                     Socket clientSocket = serverSocket.Accept();
                     //Get the IP address of the link
@@ -92,10 +96,11 @@ namespace GameServer
                     }
 
                     Thread thread = new Thread(Receive);
-                        thread.IsBackground = true;
-                        thread.Start(clientSocket);
-                    } 
-                catch (Exception e) {
+                    thread.IsBackground = true;
+                    thread.Start(clientSocket);
+                }
+                catch (Exception e)
+                {
                     form.Println($"Error： {e.Message}");
                     break;
                 }
@@ -110,7 +115,7 @@ namespace GameServer
         static bool containThisName(string s)
         {
             foreach (var item in listPlayer)
-                if(item.Nickname == s)
+                if (item.Nickname == s)
                     return true;
             return false;
         }
@@ -123,7 +128,7 @@ namespace GameServer
         static void updateScore(Socket socket, int point)
         {
             foreach (var item in listPlayer)
-                if(item.Socket == socket)
+                if (item.Socket == socket)
                 {
                     item.Point += point;
                     break;
@@ -139,7 +144,7 @@ namespace GameServer
         static void setDisqualifyPlayer(Socket socket, bool kick)
         {
             foreach (var item in listPlayer)
-                if(item.Socket == socket)
+                if (item.Socket == socket)
                 {
                     item.Disqualified = kick;
                     break;
@@ -154,7 +159,7 @@ namespace GameServer
         static bool allDisqualiedExceptMe(int now)
         {
             for (int i = 0; i < (int)listPlayer.Count(); i++)
-                if (i!= now && !listPlayer[i].Disqualified) return false;
+                if (i != now && !listPlayer[i].Disqualified) return false;
             return true;
         }
         static void sendScoreboard()
@@ -192,8 +197,8 @@ namespace GameServer
             if (turn >= 5)
             {
                 running = false;
-                byte[] msg  = Encoding.UTF8.GetBytes("The fifth turn has ended! Game over!/");
-                foreach(Player player in listPlayer)
+                byte[] msg = Encoding.UTF8.GetBytes("The fifth turn has ended! Game over!/");
+                foreach (Player player in listPlayer)
                 {
                     player.Socket.Send(msg);
                 }
@@ -201,7 +206,7 @@ namespace GameServer
             }
             else
             {
-                byte[] msg = Encoding.UTF8.GetBytes("This is turn number: "+ (turn+1)+"/");
+                byte[] msg = Encoding.UTF8.GetBytes("This is turn number: " + (turn + 1) + "/");
                 foreach (Player player in listPlayer)
                 {
                     player.Socket.Send(msg);
@@ -219,7 +224,7 @@ namespace GameServer
             for (int index = 0; index < listPlayer.Count(); index++)
             {
                 byte[] sendeee = null;
-                string str = "InTurn?" + (index == who ? '1' : '0').ToString()+"/";
+                string str = "InTurn?" + (index == who ? '1' : '0').ToString() + "/";
                 Debug.WriteLine(str);
                 sendeee = Encoding.UTF8.GetBytes(str);
                 listPlayer[index].Socket.Send(sendeee);
@@ -258,14 +263,16 @@ namespace GameServer
                     clientPoint = name;
                     listPlayer.Add(new Player(name, 0, 0, false, clientSocket));
                     setname = true;
-                    form.Println("The player " +name + " has joined the game.");
+                    form.Println("The player " + name + " has joined the game.");
 
 
                 }
             }
 
-            while (true) {
-                try {
+            while (true)
+            {
+                try
+                {
                     //Get the sent message container
                     byte[] buf = new byte[1024 * 1024 * 2];
                     int len = clientSocket.Receive(buf);
@@ -280,14 +287,14 @@ namespace GameServer
                     if (flag == "ONE:" || flag == "ALL:") // one character sent
                     {
 
-                        if (clientSocket!= listPlayer[indexPlayer].Socket)
+                        if (clientSocket != listPlayer[indexPlayer].Socket)
                         {
                             byte[] send = Encoding.UTF8.GetBytes("It is not your turn!/");
                             clientSocket.Send(send);
                             continue;
                         }
                         if (flag == "ONE:") guessOneCharacter(clientSocket, s[0]);
-                        else if(turn >1) guessTheKeyword(clientSocket, s);
+                        else if (turn > 1) guessTheKeyword(clientSocket, s);
                         else
                         {
                             byte[] send = Encoding.UTF8.GetBytes("You can only guess the key word after 2 turns./");
@@ -299,7 +306,7 @@ namespace GameServer
 
                         activatePlayer(indexPlayer);
                     }
-                    else if(flag == "MSG:") // just a chit-chat message, normal print out on form
+                    else if (flag == "MSG:") // just a chit-chat message, normal print out on form
                     {
                         //Debug.WriteLine("MSG received");
                         form.Println($"{clientPoint}: {s}");
@@ -317,7 +324,8 @@ namespace GameServer
                     //byte[] sendee = Encoding.UTF8.GetBytes("Server returns information");
                     //clientSocket.Send(sendee);
                 }
-                catch (SocketException e) {
+                catch (SocketException e)
+                {
                     form.ComboBoxRemoveItem(clientPoint);
 
                     form.Println($"Client {clientSocket.RemoteEndPoint} Disconnect： {e.Message}");
@@ -325,7 +333,8 @@ namespace GameServer
                     clientSocket.Close();
                     break;
                 }
-                catch(Exception e) {
+                catch (Exception e)
+                {
                     form.Println($"Error： {e.Message}");
                 }
             }
@@ -386,10 +395,6 @@ namespace GameServer
         /// <param name="s"></param>
         static void guessOneCharacter(Socket clientSocket, char ch)
         {
-            //Debug.WriteLine("The current questionIndex is: " + indexQuestion.ToString());
-            //Debug.WriteLine("That one character is: " + s);
-            //Debug.WriteLine("The current keyword is: " + listQuestions[indexQuestion].Keyword);
-            
             bool bingo = false; // match any character?
             for (int i = 0; i < listQuestions[indexQuestion].Keyword.Length; i++)
                 if (listQuestions[indexQuestion].Keyword[i] == ch)
@@ -397,7 +402,6 @@ namespace GameServer
                     bingo = true;
                     break;
                 }
-            //Debug.WriteLine(bingo ? "Match" : "Not match");
             if (bingo == false) // DOESN'T match annouce and move on
             {
                 byte[] ss = Encoding.UTF8.GetBytes("FLS:/");
@@ -407,13 +411,12 @@ namespace GameServer
             {
                 listQuestions[indexQuestion].updateGuesses(ch);
                 string sendee = listQuestions[indexQuestion].updateShowed();
-                //Debug.WriteLine("The keyword sent back to client: " + sendee);
-                byte[] ss = Encoding.UTF8.GetBytes("COR:" + sendee+"/"); // send to the one who guessed it right
+                byte[] ss = Encoding.UTF8.GetBytes("COR:" + sendee + "/"); // send to the one who guessed it right
                 clientSocket.Send(ss);
                 ss = Encoding.UTF8.GetBytes("UDT:" + sendee + "/"); // send to the one who isn't in turn
                 foreach (var item in listPlayer)
                 {
-                    if(item.Socket == clientSocket)
+                    if (item.Socket == clientSocket)
                     {
                         updateScore(clientSocket, 1);
                     }
@@ -445,7 +448,7 @@ namespace GameServer
             lines = lines.Skip(1).ToArray();
             for (int i = 0; i < n * 2; i += 2)
             {
-                listQuestions.Add(new Question(lines[i], lines[i + 1], lines[i].Length,new List<int>(), new List<char>()));
+                listQuestions.Add(new Question(lines[i], lines[i + 1], lines[i].Length, new List<int>(), new List<char>()));
                 Debug.WriteLine(lines[i] + '-' + lines[i + 1] + " Size = " + lines[i].Length);
             }
             Debug.WriteLine("The number of question = " + listQuestions.Count.ToString());
@@ -464,7 +467,7 @@ namespace GameServer
             {
                 Debug.WriteLine(item.Disqualified ? "Kicked" : "In");
             }
-            if (indexPlayer <0)
+            if (indexPlayer < 0)
             {
                 indexPlayer = 0;
                 activatePlayer(indexPlayer);
@@ -474,7 +477,9 @@ namespace GameServer
             if (listQuestions.Count == indexQuestion) // if we have been go through all questions
             {
                 form.disableLoadQuestionButton();
-                finalizeAndShowScoreboard();
+                MessageBox.Show("End game! Check out the scoreboard");
+                form.updateScoreboard(listPlayer);
+                return;
             }
             if (listPlayer.Count() != 1 && allDisqualiedExceptMe(indexPlayer))
             {
@@ -488,7 +493,7 @@ namespace GameServer
             // if that player hasn't been disqualified, send question to him
             foreach (var item in listPlayer)
             {
-                if(!item.Disqualified) item.Socket.Send(sendee);
+                if (!item.Disqualified) item.Socket.Send(sendee);
             }
             form.Println("Question has been loaded and sent to the clients!");
 
@@ -498,11 +503,9 @@ namespace GameServer
             }
         }
 
-        static void finalizeAndShowScoreboard()
+        static void EndGame(object sender, EventArgs e)
         {
-            MessageBox.Show("End game! Check out the scoreboard");
-
+            form.updateScoreboard(listPlayer);
         }
-
     }
 }

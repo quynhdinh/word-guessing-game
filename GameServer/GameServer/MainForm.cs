@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameServer.DTO;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,13 +18,14 @@ namespace GameServer
     public partial class MainForm : Form
     {
 
-        public MainForm(EventHandler bListenClick, EventHandler bSendClick, EventHandler bLoadQuestionClick)
+        public MainForm(EventHandler bListenClick, EventHandler bSendClick, EventHandler bLoadQuestionClick, EventHandler bEndGameClick)
         {
             InitializeComponent();
             //loadData();
             this.buttonListen.Click += bListenClick;
             this.buttonSend.Click += bSendClick;
             this.btnLoadQuestion.Click += bLoadQuestionClick;
+            this.btnEndGame.Click += bEndGameClick;
         }
         public string GetIPText()
         {
@@ -57,6 +59,28 @@ namespace GameServer
             }
             else {
                 this.textBoxMsg.AppendText(s + Environment.NewLine);
+            }
+        }
+
+        delegate void VoidDTGV(List<Player> list);
+        public void updateScoreboard(List<Player> list)
+        {
+            if(this.dgvScoreboard.Columns.Count != 0) { return;}
+            List<Player> sortedPlayers = list.OrderByDescending(o => o.Point).ToList();
+            if (this.dgvScoreboard.InvokeRequired)
+            {
+                VoidDTGV voidDTGV = updateScoreboard;
+                this.dgvScoreboard.Invoke(voidDTGV, sortedPlayers);
+            }
+            else
+            {
+                this.dgvScoreboard.Columns.Add("rank", "Rank");
+                this.dgvScoreboard.Columns.Add("name", "Player name");
+                this.dgvScoreboard.Columns.Add("score", "Score earned");
+                for (int i = 0; i < sortedPlayers.Count(); i++)
+                {
+                    this.dgvScoreboard.Rows.Add((i + 1).ToString(), sortedPlayers[i].Nickname, sortedPlayers[i].Point);
+                }
             }
         }
         public void loadQuestion(string keyword, string hint)
@@ -93,15 +117,6 @@ namespace GameServer
             else {
                 this.comboBoxAllClients.Items.Remove(s);
             }
-        }
-
-        private void btnRandomQuestion_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void buttonSend_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void btnClearStatus_Click(object sender, EventArgs e)

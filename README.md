@@ -11,12 +11,15 @@ A socket programming assignment of designing a game show called "Magical Wheel" 
 - [x] Receive the whole guess from client
 - [x] Moving around players
 - [x] Announce score to players
+- [x] Can't join a game that is already running
+- [x] Run at different port for another game play if wanted
 - [ ] Countdown timer
 #### Bonus functions
 - [x] Chat between server and clients(propose questions,...)
-- [ ] Create scoreboard
+- [x] Create scoreboard
 #### TODO
 - [ ] Screen recording game play
 - [ ] Writing references
+
 
 ![Imgur Image](https://imgur.com/wSvVhP5.jpg)

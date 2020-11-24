@@ -54,9 +54,6 @@ C:/Users/quynh/Desktop/socket/MagicalWheel/GameClient/GameClient/obj/Debug/GameC
 /home/khoa/lab/socket_programming/MagicalWheelSocket/GameClient/GameClient/obj/Debug/GameClient.csproj.CoreCompileInputs.cache
 /home/khoa/lab/socket_programming/MagicalWheelSocket/GameClient/GameClient/obj/Debug/GameClient.exe
 /home/khoa/lab/socket_programming/MagicalWheelSocket/GameClient/GameClient/obj/Debug/GameClient.pdb
-C:\Users\quynh\Desktop\socket\MagicalWheelSocket\GameClient\GameClient\bin\Debug\GameClient.exe.config
-C:\Users\quynh\Desktop\socket\MagicalWheelSocket\GameClient\GameClient\bin\Debug\GameClient.exe
-C:\Users\quynh\Desktop\socket\MagicalWheelSocket\GameClient\GameClient\bin\Debug\GameClient.pdb
 >>>>>>> Stashed changes
 C:\Users\quynh\Desktop\socket\MagicalWheelSocket\GameClient\GameClient\obj\Debug\GameClient.MainForm.resources
 C:\Users\quynh\Desktop\socket\MagicalWheelSocket\GameClient\GameClient\obj\Debug\GameClient.Properties.Resources.resources

@@ -18,7 +18,7 @@ namespace GameClient
 
         static MainForm form = null;
 
-        static int _turn = 0; // the number of turns this player has been played
+        //static int _turn = 0; // the number of turns this player has been played
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -75,15 +75,12 @@ namespace GameClient
                         string s = i;
                         if (s.StartsWith("QQQ"))
                         {
-                            System.Diagnostics.Debug.WriteLine("This is QQQ: ");
-                            form.Println(s);
                             s = s.Substring(3);
                             form.updateQuestion(s);
                             form.Println("A new question has been loaded!");
                         }
                         else if (s.StartsWith("InTurn?"))
                         {
-                            //Debug.WriteLine("This is InTurn?: ");
                             int turn = s.Last() == '0' ? 0 : 1;
                             Debug.WriteLine("Turn = " + turn.ToString());
                             form.isItMyTurn(turn);
@@ -113,9 +110,13 @@ namespace GameClient
                         {
                             form.Println("You guessed it incorrectly");
                         }
+                        else if(s.StartsWith("ANNO"))
+                        {
+                            s = s.Substring(4);
+                            form.Println(s);
+                        }
                         else
                         {
-                            Debug.WriteLine("CAME TO MESSAGE BOX");
                             form.Println(s);
                         }
                     }
@@ -158,10 +159,6 @@ namespace GameClient
             if (ch.Length != 0 && guessAll.Length != 0)
             {
                 form.Println("Error: You can EITHER guess all OR guess one character (leave one text box blank)");
-            }
-            else if (ch.Length > 1)
-            {
-                form.Println("Error: Guess for ONE character only");
             }
             else if (ch.Length == 1) // Guessing one character only
             {

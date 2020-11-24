@@ -46,11 +46,9 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.txbHint = new System.Windows.Forms.TextBox();
-            this.txbKeyword = new System.Windows.Forms.TextBox();
             this.btnGuess = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.lblSize = new System.Windows.Forms.Label();
             this.btnClearStatus = new System.Windows.Forms.Button();
+            this.txbKeyword = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPort)).BeginInit();
             this.SuspendLayout();
             // 
@@ -167,8 +165,9 @@
             // 
             this.txbGuessAll.Location = new System.Drawing.Point(173, 154);
             this.txbGuessAll.Name = "txbGuessAll";
-            this.txbGuessAll.Size = new System.Drawing.Size(238, 23);
+            this.txbGuessAll.Size = new System.Drawing.Size(293, 23);
             this.txbGuessAll.TabIndex = 31;
+            this.txbGuessAll.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label7
             // 
@@ -182,9 +181,11 @@
             // txbGuessOne
             // 
             this.txbGuessOne.Location = new System.Drawing.Point(173, 124);
+            this.txbGuessOne.MaxLength = 1;
             this.txbGuessOne.Name = "txbGuessOne";
-            this.txbGuessOne.Size = new System.Drawing.Size(238, 23);
+            this.txbGuessOne.Size = new System.Drawing.Size(293, 23);
             this.txbGuessOne.TabIndex = 29;
+            this.txbGuessOne.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label6
             // 
@@ -208,42 +209,17 @@
             // 
             this.txbHint.Location = new System.Drawing.Point(85, 88);
             this.txbHint.Name = "txbHint";
-            this.txbHint.Size = new System.Drawing.Size(326, 23);
+            this.txbHint.Size = new System.Drawing.Size(381, 23);
             this.txbHint.TabIndex = 26;
-            // 
-            // txbKeyword
-            // 
-            this.txbKeyword.Location = new System.Drawing.Point(85, 52);
-            this.txbKeyword.Name = "txbKeyword";
-            this.txbKeyword.Size = new System.Drawing.Size(326, 23);
-            this.txbKeyword.TabIndex = 25;
             // 
             // btnGuess
             // 
-            this.btnGuess.Location = new System.Drawing.Point(209, 196);
+            this.btnGuess.Location = new System.Drawing.Point(270, 183);
             this.btnGuess.Name = "btnGuess";
             this.btnGuess.Size = new System.Drawing.Size(122, 23);
             this.btnGuess.TabIndex = 33;
             this.btnGuess.Text = "Guess";
             this.btnGuess.UseVisualStyleBackColor = true;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(417, 55);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(38, 17);
-            this.label3.TabIndex = 35;
-            this.label3.Text = "Size: ";
-            // 
-            // lblSize
-            // 
-            this.lblSize.AutoSize = true;
-            this.lblSize.Location = new System.Drawing.Point(452, 55);
-            this.lblSize.Name = "lblSize";
-            this.lblSize.Size = new System.Drawing.Size(31, 17);
-            this.lblSize.TabIndex = 36;
-            this.lblSize.Text = "N/A";
             // 
             // btnClearStatus
             // 
@@ -255,15 +231,25 @@
             this.btnClearStatus.UseVisualStyleBackColor = true;
             this.btnClearStatus.Click += new System.EventHandler(this.btnClearStatus_Click);
             // 
+            // txbKeyword
+            // 
+            this.txbKeyword.Font = new System.Drawing.Font("Microsoft YaHei", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txbKeyword.ForeColor = System.Drawing.SystemColors.InfoText;
+            this.txbKeyword.Location = new System.Drawing.Point(85, 39);
+            this.txbKeyword.Name = "txbKeyword";
+            this.txbKeyword.ReadOnly = true;
+            this.txbKeyword.Size = new System.Drawing.Size(381, 43);
+            this.txbKeyword.TabIndex = 38;
+            this.txbKeyword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // MainForm
             // 
             this.AcceptButton = this.buttonSend;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(778, 328);
+            this.Controls.Add(this.txbKeyword);
             this.Controls.Add(this.btnClearStatus);
-            this.Controls.Add(this.lblSize);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.btnGuess);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.txbGuessAll);
@@ -272,7 +258,6 @@
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txbHint);
-            this.Controls.Add(this.txbKeyword);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.textBoxSendee);
@@ -320,10 +305,8 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txbHint;
-        private System.Windows.Forms.TextBox txbKeyword;
         private System.Windows.Forms.Button btnGuess;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label lblSize;
         private System.Windows.Forms.Button btnClearStatus;
+        private System.Windows.Forms.TextBox txbKeyword;
     }
 }

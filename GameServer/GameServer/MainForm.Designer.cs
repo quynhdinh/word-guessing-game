@@ -39,15 +39,16 @@
             this.comboBoxAllClients = new System.Windows.Forms.ComboBox();
             this.txbKeyword = new System.Windows.Forms.TextBox();
             this.btnLoadQuestion = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dgvScoreboard = new System.Windows.Forms.DataGridView();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.txbHint = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.btnClearStatus = new System.Windows.Forms.Button();
+            this.btnEndGame = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPort)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvScoreboard)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -122,7 +123,6 @@
             this.buttonSend.TabIndex = 6;
             this.buttonSend.Text = "Send";
             this.buttonSend.UseVisualStyleBackColor = true;
-            this.buttonSend.Click += new System.EventHandler(this.buttonSend_Click);
             // 
             // textBoxSendee
             // 
@@ -142,10 +142,14 @@
             // 
             // txbKeyword
             // 
+            this.txbKeyword.Font = new System.Drawing.Font("Microsoft YaHei", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txbKeyword.ForeColor = System.Drawing.SystemColors.InfoText;
             this.txbKeyword.Location = new System.Drawing.Point(89, 36);
             this.txbKeyword.Name = "txbKeyword";
-            this.txbKeyword.Size = new System.Drawing.Size(315, 23);
+            this.txbKeyword.ReadOnly = true;
+            this.txbKeyword.Size = new System.Drawing.Size(315, 43);
             this.txbKeyword.TabIndex = 9;
+            this.txbKeyword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // btnLoadQuestion
             // 
@@ -155,20 +159,23 @@
             this.btnLoadQuestion.TabIndex = 10;
             this.btnLoadQuestion.Text = "Load question";
             this.btnLoadQuestion.UseVisualStyleBackColor = true;
-            this.btnLoadQuestion.Click += new System.EventHandler(this.btnRandomQuestion_Click);
             // 
-            // dataGridView1
+            // dgvScoreboard
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(15, 130);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(389, 186);
-            this.dataGridView1.TabIndex = 12;
+            this.dgvScoreboard.AllowUserToAddRows = false;
+            this.dgvScoreboard.AllowUserToDeleteRows = false;
+            this.dgvScoreboard.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dgvScoreboard.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvScoreboard.Location = new System.Drawing.Point(15, 134);
+            this.dgvScoreboard.Name = "dgvScoreboard";
+            this.dgvScoreboard.ReadOnly = true;
+            this.dgvScoreboard.Size = new System.Drawing.Size(389, 186);
+            this.dgvScoreboard.TabIndex = 12;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(154, 110);
+            this.label3.Location = new System.Drawing.Point(154, 114);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(77, 17);
             this.label3.TabIndex = 13;
@@ -186,7 +193,7 @@
             // 
             // txbHint
             // 
-            this.txbHint.Location = new System.Drawing.Point(89, 72);
+            this.txbHint.Location = new System.Drawing.Point(89, 85);
             this.txbHint.Name = "txbHint";
             this.txbHint.Size = new System.Drawing.Size(315, 23);
             this.txbHint.TabIndex = 17;
@@ -194,7 +201,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 75);
+            this.label5.Location = new System.Drawing.Point(6, 88);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(31, 17);
             this.label5.TabIndex = 18;
@@ -219,19 +226,30 @@
             this.btnClearStatus.UseVisualStyleBackColor = true;
             this.btnClearStatus.Click += new System.EventHandler(this.btnClearStatus_Click);
             // 
+            // btnEndGame
+            // 
+            this.btnEndGame.Location = new System.Drawing.Point(463, 304);
+            this.btnEndGame.Name = "btnEndGame";
+            this.btnEndGame.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.btnEndGame.Size = new System.Drawing.Size(134, 23);
+            this.btnEndGame.TabIndex = 21;
+            this.btnEndGame.Text = "End game early";
+            this.btnEndGame.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AcceptButton = this.buttonSend;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(778, 328);
+            this.Controls.Add(this.btnEndGame);
             this.Controls.Add(this.btnClearStatus);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txbHint);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.dgvScoreboard);
             this.Controls.Add(this.btnLoadQuestion);
             this.Controls.Add(this.txbKeyword);
             this.Controls.Add(this.comboBoxAllClients);
@@ -250,7 +268,7 @@
             this.Name = "MainForm";
             this.Text = "Server Window";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPort)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvScoreboard)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -274,12 +292,13 @@
         private System.Windows.Forms.ComboBox comboBoxAllClients;
         private System.Windows.Forms.TextBox txbKeyword;
         private System.Windows.Forms.Button btnLoadQuestion;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dgvScoreboard;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txbHint;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button btnClearStatus;
+        private System.Windows.Forms.Button btnEndGame;
     }
 }
