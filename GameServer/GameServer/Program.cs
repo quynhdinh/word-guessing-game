@@ -234,6 +234,7 @@ namespace GameServer
         {
             Socket clientSocket = so as Socket;
             string clientPoint = clientSocket.RemoteEndPoint.ToString();
+            Debug.WriteLine("Received from: " + clientPoint);
             bool setname = false;
             byte[] send1 = Encoding.UTF8.GetBytes("Write in the chat what your username is:");
             clientSocket.Send(send1);
@@ -281,6 +282,8 @@ namespace GameServer
                     string s = Encoding.UTF8.GetString(buf, 0, len);
                     string flag = s.Substring(0, 4); // capture the flag
                     s = s.Substring(4); // delete the flag 
+                    //Debug.WriteLine("Message received: " + s);
+                    //Debug.WriteLine("flag = " + flag);
                     if (flag == "ONE:" || flag == "ALL:") // one character sent
                     {
 
@@ -305,6 +308,7 @@ namespace GameServer
                     }
                     else if (flag == "MSG:") // just a chit-chat message, normal print out on form
                     {
+                        //Debug.WriteLine("MSG received");
                         form.Println($"{clientPoint}: {s}");
 
                         //send the chat message to other players(or to server only ???)
@@ -315,6 +319,10 @@ namespace GameServer
                         }
                     }
                     else return;
+
+
+                    //byte[] sendee = Encoding.UTF8.GetBytes("Server returns information");
+                    //clientSocket.Send(sendee);
                 }
                 catch (SocketException e)
                 {
@@ -436,12 +444,14 @@ namespace GameServer
         {
             string[] lines = System.IO.File.ReadAllLines(@"../../data.txt");
             int n = int.Parse(lines[0]);
+            Debug.WriteLine("n = " + n.ToString());
             lines = lines.Skip(1).ToArray();
             for (int i = 0; i < n * 2; i += 2)
             {
                 listQuestions.Add(new Question(lines[i], lines[i + 1], lines[i].Length, new List<int>(), new List<char>()));
                 Debug.WriteLine(lines[i] + '-' + lines[i + 1] + " Size = " + lines[i].Length);
             }
+            Debug.WriteLine("The number of question = " + listQuestions.Count.ToString());
         }
         static void LoadQuestions(object sender, EventArgs e)
         {
@@ -452,6 +462,11 @@ namespace GameServer
                 return;
             }
             running = true;
+            Console.Write(indexPlayer);
+            foreach (var item in listPlayer)
+            {
+                Debug.WriteLine(item.Disqualified ? "Kicked" : "In");
+            }
             if (indexPlayer < 0)
             {
                 indexPlayer = 0;
@@ -470,6 +485,7 @@ namespace GameServer
             {
 
             }
+            //Debug.WriteLine("We are at: " + indexQuestion.ToString());
             form.loadQuestion(listQuestions[indexQuestion].Keyword.ToString(), listQuestions[indexQuestion].Hint.ToString());
             string msgQuestion = "QQQ" + listQuestions[indexQuestion].updateShowed() + ' ' + listQuestions[indexQuestion].Hint.ToString();
             byte[] sendee = Encoding.UTF8.GetBytes(msgQuestion);

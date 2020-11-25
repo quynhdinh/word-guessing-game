@@ -18,7 +18,7 @@ namespace GameClient
 
         static MainForm form = null;
 
-
+        //static int _turn = 0; // the number of turns this player has been played
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -110,7 +110,7 @@ namespace GameClient
                         {
                             form.Println("You guessed it incorrectly");
                         }
-                        else if(s.StartsWith("ANNO") || s.StartsWith("GESS"))
+                        else if(s.StartsWith("ANNO"))
                         {
                             s = s.Substring(4);
                             form.Println(s);
@@ -125,12 +125,11 @@ namespace GameClient
                 {
                     form.SetConnectionStatusLabel(false);
                     form.SetButtonSendEnabled(false);
-                    form.Println($"Server disconnected：{ e.Message}");
+                    form.Println($"Server disconnected1：{ e.Message}");
                     break;
                 }
             }
         }
-
 
         static void SendMsg(object sender, EventArgs e)
         {
@@ -153,22 +152,28 @@ namespace GameClient
         }
         static void GuessingKeyword(object sender, EventArgs e)
         {
-            string guess = form.GetStringGuess();
+            Debug.WriteLine("Guessing keyword in");
+            string ch = form.GetCharacter();
+            string guessAll = form.GetStringGuess();
             
-            if (guess.Length == 1) // Guessing one character only
+            if (ch.Length != 0 && guessAll.Length != 0)
             {
-                if (alreadyShown(form.getShownCharacters(), guess[0]))
+                form.Println("Error: You can EITHER guess all OR guess one character (leave one text box blank)");
+            }
+            else if (ch.Length == 1) // Guessing one character only
+            {
+                if (alreadyShown(form.getShownCharacters(), ch[0]))
                 {
                     form.Println("This character is already shown. Please choose another one");
                     return;
                 }
-                byte[] sendee = Encoding.UTF8.GetBytes("ONE:" + guess.ToLower().ToString());
+                byte[] sendee = Encoding.UTF8.GetBytes("ONE:" + ch.ToLower().ToString());
                 clientSocket.Send(sendee);
                 form.Println("You have submit your guess");
             }
             else // Guessing the whole keyword
             {
-                byte[] sendee = Encoding.UTF8.GetBytes("ALL:" + guess);
+                byte[] sendee = Encoding.UTF8.GetBytes("ALL:" + guessAll);
                 clientSocket.Send(sendee);
                 form.Println("You have submit your guess");
             }
