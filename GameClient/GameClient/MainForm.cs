@@ -42,10 +42,11 @@ namespace GameClient
         {
             return this.textBoxSendee.Text.Trim();
         }
-        public string GetCharacter()
-        {
-            return this.txbGuessOne.Text;
-        }
+
+        #region Countdown timer business
+        #endregion
+
+
         public string GetStringGuess()
         {
             return this.txbGuessAll.Text;
