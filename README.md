@@ -13,7 +13,7 @@ A socket programming assignment of designing a game show called "Magical Wheel" 
 - [x] Announce score to players
 - [x] Can't join a game that is already running
 - [x] Run at different port for another game play if wanted
-- [ ] Countdown timer
+- [x] Countdown timer
 #### Bonus functions
 - [x] Chat between server and clients(propose questions,...)
 - [x] Create scoreboard
