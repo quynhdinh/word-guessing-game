@@ -152,7 +152,12 @@ namespace GameClient
         static void GuessingKeyword(object sender, EventArgs e)
         {
             string guess = form.GetStringGuess();
-            
+
+            if (guess.Length == 0)
+            {
+                form.Println("Please enter something first");
+                return;
+            }
             if (guess.Length == 1) // Guessing one character only
             {
                 if (alreadyShown(form.getShownCharacters(), guess[0]))

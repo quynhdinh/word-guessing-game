@@ -21,7 +21,7 @@ namespace GameServer
         static Socket serverSocket = null;
         static IPAddress ip = null;
         static IPEndPoint point = null;
-        static int indexPlayer = -1; // the index of the current player is in turn
+        static int indexPlayer = 0; // the index of the current player is in turn
         static List<Player> listPlayer;
         static MainForm form = null;
         static int turn = 0; // keep track of what turn we are in
@@ -69,7 +69,7 @@ namespace GameServer
 
         static void initializeTimer()
         {
-            secondsToWait = 5;
+            secondsToWait = 8;
             Debug.WriteLine("INITIALIZE TIMER");
             form.startTimer();
             startTime = DateTime.Now;
@@ -476,11 +476,9 @@ namespace GameServer
                 return;
             }
             running = true;
-            if (indexPlayer < 0)
-            {
-                indexPlayer = 0;
-                activatePlayer(indexPlayer);
-            }
+            indexPlayer = 0;
+            activatePlayer(indexPlayer);
+
             indexQuestion++;
             if (listQuestions.Count == indexQuestion) // if we have been go through all questions
             {
