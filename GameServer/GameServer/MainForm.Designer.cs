@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxIP = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -47,6 +48,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.btnClearStatus = new System.Windows.Forms.Button();
             this.btnEndGame = new System.Windows.Forms.Button();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvScoreboard)).BeginInit();
             this.SuspendLayout();
@@ -300,5 +302,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button btnClearStatus;
         private System.Windows.Forms.Button btnEndGame;
+        private System.Windows.Forms.Timer timer;
     }
 }

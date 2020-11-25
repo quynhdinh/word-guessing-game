@@ -39,10 +39,8 @@
             this.textBoxSendee = new System.Windows.Forms.TextBox();
             this.labelStatus = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.txbGuessAll = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.txbGuessOne = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.txbHint = new System.Windows.Forms.TextBox();
@@ -152,40 +150,22 @@
             this.label4.TabIndex = 11;
             this.label4.Text = "Status";
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(8, 130);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(112, 17);
-            this.label8.TabIndex = 32;
-            this.label8.Text = "Guess a character";
-            // 
             // txbGuessAll
             // 
-            this.txbGuessAll.Location = new System.Drawing.Point(173, 154);
+            this.txbGuessAll.Location = new System.Drawing.Point(85, 133);
             this.txbGuessAll.Name = "txbGuessAll";
-            this.txbGuessAll.Size = new System.Drawing.Size(293, 23);
+            this.txbGuessAll.Size = new System.Drawing.Size(381, 23);
             this.txbGuessAll.TabIndex = 31;
             this.txbGuessAll.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(8, 157);
+            this.label7.Location = new System.Drawing.Point(8, 136);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(157, 17);
+            this.label7.Size = new System.Drawing.Size(73, 17);
             this.label7.TabIndex = 30;
-            this.label7.Text = "Guess keyword and WIN!";
-            // 
-            // txbGuessOne
-            // 
-            this.txbGuessOne.Location = new System.Drawing.Point(173, 124);
-            this.txbGuessOne.MaxLength = 1;
-            this.txbGuessOne.Name = "txbGuessOne";
-            this.txbGuessOne.Size = new System.Drawing.Size(293, 23);
-            this.txbGuessOne.TabIndex = 29;
-            this.txbGuessOne.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.label7.Text = "Your guess";
             // 
             // label6
             // 
@@ -209,12 +189,13 @@
             // 
             this.txbHint.Location = new System.Drawing.Point(85, 88);
             this.txbHint.Name = "txbHint";
+            this.txbHint.ReadOnly = true;
             this.txbHint.Size = new System.Drawing.Size(381, 23);
             this.txbHint.TabIndex = 26;
             // 
             // btnGuess
             // 
-            this.btnGuess.Location = new System.Drawing.Point(270, 183);
+            this.btnGuess.Location = new System.Drawing.Point(209, 175);
             this.btnGuess.Name = "btnGuess";
             this.btnGuess.Size = new System.Drawing.Size(122, 23);
             this.btnGuess.TabIndex = 33;
@@ -244,17 +225,15 @@
             // 
             // MainForm
             // 
-            this.AcceptButton = this.buttonSend;
+            this.AcceptButton = this.btnGuess;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(778, 328);
             this.Controls.Add(this.txbKeyword);
             this.Controls.Add(this.btnClearStatus);
             this.Controls.Add(this.btnGuess);
-            this.Controls.Add(this.label8);
             this.Controls.Add(this.txbGuessAll);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.txbGuessOne);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txbHint);
@@ -298,10 +277,8 @@
         private System.Windows.Forms.TextBox textBoxSendee;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txbGuessAll;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox txbGuessOne;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txbHint;

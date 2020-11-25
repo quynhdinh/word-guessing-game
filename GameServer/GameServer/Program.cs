@@ -27,7 +27,6 @@ namespace GameServer
         static int turn = 0; // keep track of what turn we are in
         static bool running = false;
 
-        //static Dictionary<string, int> scoreboard = null;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -38,15 +37,43 @@ namespace GameServer
             listPlayer = new List<Player>();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            form = new MainForm(bListenClick, bSendClick, bLoadQuestionClick, EndGame);
+            form = new MainForm(bListenClick, bSendClick, bLoadQuestionClick, EndGame, timerTick);
             loadData();
             Application.Run(form);
         }
+        static int secondsToWait;
+        static private DateTime startTime;
 
         static EventHandler bListenClick = SetListen;
         static EventHandler bSendClick = SendMsg;
         static EventHandler bLoadQuestionClick = LoadQuestions;
         static EventHandler bEndGameClick = EndGame;
+        static EventHandler timerTick = Timer;
+        static void Timer(object sender, EventArgs e)
+        {
+            int elapsedSeconds = (int)(DateTime.Now - startTime).TotalSeconds;
+            int remainingSeconds = secondsToWait - elapsedSeconds;
+
+            if (remainingSeconds <= 0)
+            {
+                // run your function
+                form.stopTimer();
+                byte[] msg = Encoding.UTF8.GetBytes("Time's out. You lost your turn./");
+                Debug.WriteLine("Index player = " + indexPlayer.ToString());
+                listPlayer[indexPlayer].Socket.Send(msg);
+                nextPlayer(ref indexPlayer);
+                activatePlayer(indexPlayer);
+            }
+            
+        }
+
+        static void initializeTimer()
+        {
+            secondsToWait = 5;
+            Debug.WriteLine("INITIALIZE TIMER");
+            form.startTimer();
+            startTime = DateTime.Now;
+        }
         static void SetListen(object sender, EventArgs e)
         {
             ip = IPAddress.Parse(form.GetIPText());
@@ -225,16 +252,15 @@ namespace GameServer
             {
                 byte[] sendeee = null;
                 string str = "InTurn?" + (index == who ? '1' : '0').ToString() + "/";
-                Debug.WriteLine(str);
                 sendeee = Encoding.UTF8.GetBytes(str);
                 listPlayer[index].Socket.Send(sendeee);
             }
+            initializeTimer();
         }
         static void Receive(object so)
         {
             Socket clientSocket = so as Socket;
             string clientPoint = clientSocket.RemoteEndPoint.ToString();
-            Debug.WriteLine("Received from: " + clientPoint);
             bool setname = false;
             byte[] send1 = Encoding.UTF8.GetBytes("Write in the chat what your username is:");
             clientSocket.Send(send1);
@@ -282,8 +308,6 @@ namespace GameServer
                     string s = Encoding.UTF8.GetString(buf, 0, len);
                     string flag = s.Substring(0, 4); // capture the flag
                     s = s.Substring(4); // delete the flag 
-                    //Debug.WriteLine("Message received: " + s);
-                    //Debug.WriteLine("flag = " + flag);
                     if (flag == "ONE:" || flag == "ALL:") // one character sent
                     {
 
@@ -301,14 +325,12 @@ namespace GameServer
                             clientSocket.Send(send);
                             continue;
                         }
-                        Debug.WriteLine("On player: " + indexPlayer.ToString());
                         nextPlayer(ref indexPlayer);
 
                         activatePlayer(indexPlayer);
                     }
                     else if (flag == "MSG:") // just a chit-chat message, normal print out on form
                     {
-                        //Debug.WriteLine("MSG received");
                         form.Println($"{clientPoint}: {s}");
 
                         //send the chat message to other players(or to server only ???)
@@ -319,10 +341,6 @@ namespace GameServer
                         }
                     }
                     else return;
-
-
-                    //byte[] sendee = Encoding.UTF8.GetBytes("Server returns information");
-                    //clientSocket.Send(sendee);
                 }
                 catch (SocketException e)
                 {
@@ -375,7 +393,6 @@ namespace GameServer
                     listPlayer[index].Socket.Send(sendeee);
 
                 }
-                indexPlayer = -1;
 
             }
             else // guess it wrong => disqualify this player
@@ -444,14 +461,11 @@ namespace GameServer
         {
             string[] lines = System.IO.File.ReadAllLines(@"../../data.txt");
             int n = int.Parse(lines[0]);
-            Debug.WriteLine("n = " + n.ToString());
             lines = lines.Skip(1).ToArray();
             for (int i = 0; i < n * 2; i += 2)
             {
                 listQuestions.Add(new Question(lines[i], lines[i + 1], lines[i].Length, new List<int>(), new List<char>()));
-                Debug.WriteLine(lines[i] + '-' + lines[i + 1] + " Size = " + lines[i].Length);
             }
-            Debug.WriteLine("The number of question = " + listQuestions.Count.ToString());
         }
         static void LoadQuestions(object sender, EventArgs e)
         {
@@ -462,16 +476,10 @@ namespace GameServer
                 return;
             }
             running = true;
-            Console.Write(indexPlayer);
-            foreach (var item in listPlayer)
-            {
-                Debug.WriteLine(item.Disqualified ? "Kicked" : "In");
-            }
             if (indexPlayer < 0)
             {
                 indexPlayer = 0;
                 activatePlayer(indexPlayer);
-
             }
             indexQuestion++;
             if (listQuestions.Count == indexQuestion) // if we have been go through all questions
@@ -485,7 +493,6 @@ namespace GameServer
             {
 
             }
-            //Debug.WriteLine("We are at: " + indexQuestion.ToString());
             form.loadQuestion(listQuestions[indexQuestion].Keyword.ToString(), listQuestions[indexQuestion].Hint.ToString());
             string msgQuestion = "QQQ" + listQuestions[indexQuestion].updateShowed() + ' ' + listQuestions[indexQuestion].Hint.ToString();
             byte[] sendee = Encoding.UTF8.GetBytes(msgQuestion);
@@ -497,10 +504,6 @@ namespace GameServer
             }
             form.Println("Question has been loaded and sent to the clients!");
 
-            foreach (var item in listPlayer)
-            {
-                Debug.WriteLine("player: " + item.Nickname);
-            }
         }
 
         static void EndGame(object sender, EventArgs e)

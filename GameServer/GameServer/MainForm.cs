@@ -18,7 +18,7 @@ namespace GameServer
     public partial class MainForm : Form
     {
 
-        public MainForm(EventHandler bListenClick, EventHandler bSendClick, EventHandler bLoadQuestionClick, EventHandler bEndGameClick)
+        public MainForm(EventHandler bListenClick, EventHandler bSendClick, EventHandler bLoadQuestionClick, EventHandler bEndGameClick, EventHandler timerTick)
         {
             InitializeComponent();
             //loadData();
@@ -26,6 +26,7 @@ namespace GameServer
             this.buttonSend.Click += bSendClick;
             this.btnLoadQuestion.Click += bLoadQuestionClick;
             this.btnEndGame.Click += bEndGameClick;
+            this.timer.Tick += timerTick;
         }
         public string GetIPText()
         {
@@ -41,7 +42,17 @@ namespace GameServer
         {
             return this.textBoxSendee.Text.Trim();
         }
+        #region Timer business
 
+        public void startTimer()
+        {
+            this.timer.Start();
+        }
+        public void stopTimer()
+        {
+            this.timer.Stop();
+        }
+        #endregion
         public void ClearMsgText()
         {
             this.textBoxSendee.Clear();
