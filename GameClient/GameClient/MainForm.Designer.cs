@@ -97,7 +97,7 @@
             // textBoxMsg
             // 
             this.textBoxMsg.BackColor = System.Drawing.SystemColors.Window;
-            this.textBoxMsg.Location = new System.Drawing.Point(489, 26);
+            this.textBoxMsg.Location = new System.Drawing.Point(386, 29);
             this.textBoxMsg.Multiline = true;
             this.textBoxMsg.Name = "textBoxMsg";
             this.textBoxMsg.ReadOnly = true;
@@ -117,7 +117,7 @@
             // buttonSend
             // 
             this.buttonSend.Enabled = false;
-            this.buttonSend.Location = new System.Drawing.Point(694, 272);
+            this.buttonSend.Location = new System.Drawing.Point(591, 275);
             this.buttonSend.Name = "buttonSend";
             this.buttonSend.Size = new System.Drawing.Size(75, 23);
             this.buttonSend.TabIndex = 6;
@@ -126,7 +126,7 @@
             // 
             // textBoxSendee
             // 
-            this.textBoxSendee.Location = new System.Drawing.Point(489, 272);
+            this.textBoxSendee.Location = new System.Drawing.Point(386, 275);
             this.textBoxSendee.Name = "textBoxSendee";
             this.textBoxSendee.Size = new System.Drawing.Size(197, 23);
             this.textBoxSendee.TabIndex = 7;
@@ -144,7 +144,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(604, 5);
+            this.label4.Location = new System.Drawing.Point(506, 5);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(43, 17);
             this.label4.TabIndex = 11;
@@ -154,7 +154,7 @@
             // 
             this.txbGuessAll.Location = new System.Drawing.Point(85, 133);
             this.txbGuessAll.Name = "txbGuessAll";
-            this.txbGuessAll.Size = new System.Drawing.Size(381, 23);
+            this.txbGuessAll.Size = new System.Drawing.Size(286, 23);
             this.txbGuessAll.TabIndex = 31;
             this.txbGuessAll.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -188,14 +188,15 @@
             // txbHint
             // 
             this.txbHint.Location = new System.Drawing.Point(85, 88);
+            this.txbHint.Multiline = true;
             this.txbHint.Name = "txbHint";
             this.txbHint.ReadOnly = true;
-            this.txbHint.Size = new System.Drawing.Size(381, 23);
+            this.txbHint.Size = new System.Drawing.Size(286, 39);
             this.txbHint.TabIndex = 26;
             // 
             // btnGuess
             // 
-            this.btnGuess.Location = new System.Drawing.Point(209, 175);
+            this.btnGuess.Location = new System.Drawing.Point(152, 162);
             this.btnGuess.Name = "btnGuess";
             this.btnGuess.Size = new System.Drawing.Size(122, 23);
             this.btnGuess.TabIndex = 33;
@@ -204,7 +205,7 @@
             // 
             // btnClearStatus
             // 
-            this.btnClearStatus.Location = new System.Drawing.Point(596, 301);
+            this.btnClearStatus.Location = new System.Drawing.Point(493, 304);
             this.btnClearStatus.Name = "btnClearStatus";
             this.btnClearStatus.Size = new System.Drawing.Size(98, 23);
             this.btnClearStatus.TabIndex = 37;
@@ -219,7 +220,7 @@
             this.txbKeyword.Location = new System.Drawing.Point(85, 39);
             this.txbKeyword.Name = "txbKeyword";
             this.txbKeyword.ReadOnly = true;
-            this.txbKeyword.Size = new System.Drawing.Size(381, 43);
+            this.txbKeyword.Size = new System.Drawing.Size(286, 43);
             this.txbKeyword.TabIndex = 38;
             this.txbKeyword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -228,7 +229,7 @@
             this.AcceptButton = this.btnGuess;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(778, 328);
+            this.ClientSize = new System.Drawing.Size(678, 328);
             this.Controls.Add(this.txbKeyword);
             this.Controls.Add(this.btnClearStatus);
             this.Controls.Add(this.btnGuess);
