@@ -18,8 +18,8 @@ A socket programming assignment of designing a game show called "Magical Wheel" 
 - [x] Chat between server and clients(propose questions,...)
 - [x] Create scoreboard
 #### TODO
-- [ ] Screen recording game play
-- [ ] Writing references
+- [x] Screen recording game play
+- [x] Writing references
 
 
-![Imgur Image](https://imgur.com/wSvVhP5.jpg)
+![Imgur](https://imgur.com/ezhcpz7.jpg)
