@@ -134,11 +134,7 @@ namespace GameServer
             }
         }
 
-        /// <summary>
-        /// check whether the listPlayer already has the name s
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
+        // check whether the listPlayer already has the name s
         static bool containThisName(string s)
         {
             foreach (var item in listPlayer)
@@ -147,11 +143,7 @@ namespace GameServer
             return false;
         }
 
-        /// <summary>
-        /// update for player that at Socket 'socket' with 'point' points
-        /// </summary>
-        /// <param name="socket"></param>
-        /// <param name="point"></param>
+        // update for player that at Socket 'socket' with 'point' points
         static void updateScore(Socket socket, int point)
         {
             foreach (var item in listPlayer)
@@ -163,11 +155,7 @@ namespace GameServer
         }
 
 
-        /// <summary>
-        /// set disqualify status for the player that is at Socket 'socket' as 'kick'
-        /// </summary>
-        /// <param name="socket"></param>
-        /// <param name="kick"></param>
+        // set disqualify status for the player that is at Socket 'socket' as 'kick'
         static void setDisqualifyPlayer(Socket socket, bool kick)
         {
             foreach (var item in listPlayer)
@@ -178,11 +166,7 @@ namespace GameServer
                 }
         }
 
-        /// <summary>
-        /// if the player at index 'now' is the only one that has not been disqualified
-        /// </summary>
-        /// <param name="now"></param>
-        /// <returns></returns>
+        // if the player at index 'now' is the only one that has not been disqualified
         static bool allDisqualiedExceptMe(int now)
         {
             for (int i = 0; i < (int)listPlayer.Count(); i++)
@@ -204,10 +188,8 @@ namespace GameServer
                 player.Socket.Send(msg);
             }
         }
-        /// <summary>
-        /// update the index to the next player that has not been disqualified
-        /// </summary>
-        /// <param name="now"></param>
+
+        // update the index to the next player that has not been disqualified
         static void nextPlayer(ref int _now)
         {
             if (!running) return;
@@ -241,10 +223,8 @@ namespace GameServer
             }
 
         }
-        /// <summary>
-        /// send signal that the player has index as who is in turn all others are not in turn(enable button Guess)
-        /// </summary>
-        /// <param name="who"></param>
+
+        // send signal that the player has index as who is in turn all others are not in turn(enable button Guess)
         static void activatePlayer(int who)
         {
             if (!running) return;
@@ -358,11 +338,7 @@ namespace GameServer
             }
         }
 
-        /// <summary>
-        /// process when received the string 's' and the player at 'clientSocket' choose to guess they whole keyword
-        /// </summary>
-        /// <param name="clientSocket"></param>
-        /// <param name="s"></param>
+        // process when received the string 's' and the player at 'clientSocket' choose to guess they whole keyword
         static void guessTheKeyword(Socket clientSocket, string s)
         {
             if (s == listQuestions[indexQuestion].Keyword) // guess the whole keyword right
@@ -404,12 +380,7 @@ namespace GameServer
             }
         }
 
-        /// <summary>
-        /// process when received the string 's' and the player at 'clientSocket' choose to guess only one character
-        /// </summary>
-        /// <param name="client"></param>
-        /// <param name=""></param>
-        /// <param name="s"></param>
+        // process when received the string 's' and the player at 'clientSocket' choose to guess only one character
         static void guessOneCharacter(Socket clientSocket, char ch)
         {
             bool bingo = false; // match any character?
@@ -441,6 +412,8 @@ namespace GameServer
                 }
             }
         }
+
+        // send message event
         static void SendMsg(object sender, EventArgs e)
         {
             string msg = form.GetMsgText();
@@ -454,9 +427,7 @@ namespace GameServer
             form.ClearMsgText();
         }
 
-        /// <summary>
-        /// Load data from file
-        /// </summary>
+        // Load data from file
         static void loadData()
         {
             string[] lines = System.IO.File.ReadAllLines(@"../../data.txt");
@@ -467,6 +438,8 @@ namespace GameServer
                 listQuestions.Add(new Question(lines[i], lines[i + 1], lines[i].Length, new List<int>(), new List<char>()));
             }
         }
+
+        // load question event
         static void LoadQuestions(object sender, EventArgs e)
         {
             turn = 0;
